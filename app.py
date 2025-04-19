@@ -7,6 +7,22 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+# Create upload folder if it doesn't exist
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+# Check if required static image files exist
+required_images = [
+    'static/images/Pickupp.png',
+    'static/images/Eicherr.png',
+    'static/images/TataAce.png',
+    'static/images/Dumper.png'
+]
+
+for img_path in required_images:
+    if not os.path.exists(img_path):
+        print(f"WARNING: Required image file {img_path} not found!")
+
 # Store truck data
 truck_data = []
 
@@ -490,8 +506,6 @@ def add_truck():
     return render_template('add_truck.html')
 
 if __name__ == '__main__':
-    if not os.path.exists(UPLOAD_FOLDER):
-        os.makedirs(UPLOAD_FOLDER)
     # Load existing images
     for filename in os.listdir(UPLOAD_FOLDER):
         if filename.lower().endswith(('png', 'jpg', 'jpeg', 'gif')):
