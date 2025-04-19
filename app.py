@@ -501,4 +501,6 @@ if __name__ == '__main__':
                 'location': 'N/A',
                 'image_url': '/' + os.path.join(UPLOAD_FOLDER, filename)
             })
-    app.run(debug=True)
+    # Use environment variables for host and port if available (for production)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
