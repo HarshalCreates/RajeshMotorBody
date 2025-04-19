@@ -1,0 +1,327 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Model Detail Header -->
+<section class="bg-dark text-light py-5 mb-5">
+    <div class="container text-center" data-aos="fade-up">
+        <h1 class="display-4 fw-bold">{{ model.name }} <span class="text-danger">Details</span></h1>
+        <p class="lead">{{ model.brand }} | Premium truck body design by RMB</p>
+    </div>
+</section>
+
+<!-- Model Information Section -->
+<section class="container mb-5">
+    <div class="row">
+        <!-- Main Image and Details -->
+        <div class="col-lg-6 mb-4" data-aos="fade-right">
+            <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+                <img src="{{ model.main_image }}" class="img-fluid" alt="{{ model.name }} Main View">
+                <div class="card-img-overlay d-flex align-items-end justify-content-end">
+                    <a href="#gallery" class="btn btn-light btn-sm rounded-pill px-3 mb-3 me-3">
+                        <i class="fas fa-images me-1"></i> View Gallery
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Specifications -->
+        <div class="col-lg-6" data-aos="fade-left">
+            <div class="card border-0 shadow-lg rounded-3 h-100">
+                <div class="card-body p-4 p-lg-5">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="fw-bold mb-0">{{ model.name }}</h2>
+                        <span class="badge bg-danger fs-6 px-3 py-2">{{ model.category }}</span>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="text-warning me-2">
+                                {% for i in range(model.rating|int) %}
+                                <i class="fas fa-star"></i>
+                                {% endfor %}
+                                {% if model.rating|float % 1 >= 0.5 %}
+                                <i class="fas fa-star-half-alt"></i>
+                                {% endif %}
+                                {% for i in range(5 - model.rating|int - (1 if model.rating|float % 1 >= 0.5 else 0)) %}
+                                <i class="far fa-star"></i>
+                                {% endfor %}
+                            </div>
+                            <span class="text-muted">({{ model.reviews }} reviews)</span>
+                        </div>
+                        
+                        <div class="border border-danger rounded-pill px-3 py-1 d-inline-flex align-items-center mb-3">
+                            <i class="fas fa-shield-alt text-danger me-2"></i>
+                            <span>{{ model.warranty }} RMB Quality Guarantee</span>
+                        </div>
+                    </div>
+                    
+                    <h4 class="fw-bold border-bottom pb-2 mb-3">Specifications</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-check-circle text-danger me-2"></i>
+                                </div>
+                                <div>
+                                    <strong>Material:</strong> {{ model.material }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-check-circle text-danger me-2"></i>
+                                </div>
+                                <div>
+                                    <strong>Dimensions:</strong> {{ model.dimensions }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-check-circle text-danger me-2"></i>
+                                </div>
+                                <div>
+                                    <strong>Load Capacity:</strong> {{ model.capacity }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-check-circle text-danger me-2"></i>
+                                </div>
+                                <div>
+                                    <strong>Manufacturing Location:</strong> {{ model.location }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-check-circle text-danger me-2"></i>
+                                </div>
+                                <div>
+                                    <strong>Compatible Chassis:</strong> {{ model.compatible_chassis }}
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="/contact" class="btn btn-danger btn-lg">
+                            <i class="fas fa-paper-plane me-2"></i> Request Quote
+                        </a>
+                        <a href="/models" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i> Back to Models
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Section -->
+<section id="gallery" class="container mb-5">
+    <h2 class="fw-bold text-center mb-4" data-aos="fade-up">Product Gallery</h2>
+    
+    <div class="row g-3">
+        {% for image in model.gallery_images %}
+        <div class="col-6 col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="{{ loop.index * 50 }}">
+            <div class="gallery-item">
+                <div class="card border-0 shadow-sm overflow-hidden">
+                    <img src="{{ image.url }}" class="img-fluid gallery-img" alt="{{ image.caption }}" data-caption="{{ image.caption }}">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="container mb-5" data-aos="fade-up">
+    <div class="card border-0 bg-light shadow-sm rounded-3">
+        <div class="card-body p-4 p-md-5">
+            <h2 class="text-center fw-bold mb-4">Key Features</h2>
+            
+            <div class="row g-4 text-center">
+                {% for feature in model.features %}
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                    <div class="p-3">
+                        <div class="feature-icon bg-danger text-white rounded-circle mx-auto mb-3">
+                            <i class="{{ feature.icon }} fa-2x p-3"></i>
+                        </div>
+                        <h4>{{ feature.title }}</h4>
+                        <p class="text-muted">{{ feature.description }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Custom Options Section -->
+<section class="container mb-5" data-aos="fade-up">
+    <h2 class="fw-bold text-center mb-4">Customization Options</h2>
+    
+    <div class="row g-4">
+        {% for option in model.custom_options %}
+        <div class="col-md-6" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="row g-0">
+                    <div class="col-4">
+                        <img src="{{ option.image }}" class="img-fluid rounded-start h-100 object-fit-cover" alt="{{ option.title }}">
+                    </div>
+                    <div class="col-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ option.title }}</h5>
+                            <p class="card-text small text-muted">{{ option.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="container mb-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="bg-dark text-light rounded-3 p-5 text-center" data-aos="fade-up">
+                <h3 class="fw-bold mb-3">Need a custom modification for your {{ model.name }}?</h3>
+                <p class="mb-4">Our team can create custom solutions tailored to your specific requirements</p>
+                <a href="/contact" class="btn btn-danger btn-lg px-4">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Lightbox Container -->
+<div class="lightbox" id="lightbox">
+    <div class="lightbox-content">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-image" src="" alt="">
+        <div class="lightbox-caption"></div>
+        <div class="lightbox-controls">
+            <button class="lightbox-prev">&#10094;</button>
+            <button class="lightbox-next">&#10095;</button>
+        </div>
+    </div>
+</div>
+
+<!-- Load lightbox for gallery -->
+<style>
+    .gallery-img {
+        height: 200px;
+        object-fit: cover;
+    }
+    
+    .gallery-item {
+        display: block;
+        position: relative;
+        cursor: pointer;
+    }
+    
+    .gallery-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        color: white;
+        font-size: 1.5rem;
+    }
+    
+    .gallery-item:hover .gallery-overlay {
+        opacity: 1;
+    }
+    
+    /* Lightbox Styles */
+    .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        overflow: hidden;
+    }
+    
+    .lightbox-content {
+        position: relative;
+        margin: auto;
+        padding: 0;
+        width: 90%;
+        max-width: 1200px;
+        height: 90%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .lightbox-image {
+        display: block;
+        max-width: 100%;
+        max-height: 80vh;
+        margin: 0 auto;
+        object-fit: contain;
+    }
+    
+    .lightbox-caption {
+        color: white;
+        text-align: center;
+        padding: 15px 0;
+        font-size: 1.2rem;
+    }
+    
+    .lightbox-close {
+        position: absolute;
+        top: 10px;
+        right: 25px;
+        color: white;
+        font-size: 35px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 1001;
+    }
+    
+    .lightbox-controls {
+        position: absolute;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
+    .lightbox-prev, .lightbox-next {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 30px;
+        padding: 10px 20px;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.3s;
+    }
+    
+    .lightbox-prev:hover, .lightbox-next:hover {
+        opacity: 1;
+    }
+</style>
+{% endblock %} 

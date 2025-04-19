@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Models Header -->
+<section class="bg-dark text-light py-5 mb-5">
+    <div class="container text-center" data-aos="fade-up">
+        <h1 class="display-4 fw-bold">Our Truck Body <span class="text-danger">Models</span></h1>
+        <p class="lead">Premium truck body designs for various commercial vehicles</p>
+    </div>
+</section>
+
+<!-- Models Categories -->
+<section class="container mb-5">
+    <div class="row mb-4">
+        <div class="col-12" data-aos="fade-up">
+            <ul class="nav nav-pills justify-content-center mb-4">
+                <li class="nav-item mx-1">
+                    <a class="nav-link active rounded-pill px-4" href="#">All Models</a>
+                </li>
+                <li class="nav-item mx-1">
+                    <a class="nav-link rounded-pill px-4" href="#">Tata</a>
+                </li>
+                <li class="nav-item mx-1">
+                    <a class="nav-link rounded-pill px-4" href="#">Ashok Leyland</a>
+                </li>
+                <li class="nav-item mx-1">
+                    <a class="nav-link rounded-pill px-4" href="#">Eicher</a>
+                </li>
+                <li class="nav-item mx-1">
+                    <a class="nav-link rounded-pill px-4" href="#">Mahindra</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Featured Models -->
+    <div class="row g-4">
+        {% for model_id, model in truck_models.items() %}
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+            <a href="/models/{{ model_id }}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm model-card">
+                    <div class="position-relative">
+                        <img src="{{ model.main_image }}" class="card-img-top" alt="{{ model.name }}">
+                        {% if model.category in ['Premium', 'Bestseller'] %}
+                        <span class="position-absolute top-0 start-0 badge bg-danger m-3">{{ model.category }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h4 class="card-title mb-0">{{ model.name }}</h4>
+                            <span class="badge bg-dark">{{ model.brand }}</span>
+                        </div>
+                        <div class="mb-3">
+                            <span class="text-warning">
+                                {% for i in range(model.rating|int) %}
+                                <i class="fas fa-star"></i>
+                                {% endfor %}
+                                {% if model.rating|float % 1 >= 0.5 %}
+                                <i class="fas fa-star-half-alt"></i>
+                                {% endif %}
+                                {% for i in range(5 - model.rating|int - (1 if model.rating|float % 1 >= 0.5 else 0)) %}
+                                <i class="far fa-star"></i>
+                                {% endfor %}
+                            </span>
+                            <span class="text-muted ms-2">({{ model.rating }})</span>
+                        </div>
+                        <p class="card-text text-muted">{{ model.material }}</p>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <div><i class="fas fa-industry text-danger me-2"></i>Manufacturing: {{ model.location }}</div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Comparison Section -->
+<section class="container mb-5" data-aos="fade-up">
+    <div class="card border-0 bg-light shadow-sm rounded-3">
+        <div class="card-body p-4 p-md-5">
+            <h2 class="text-center fw-bold mb-4">Compare Truck Body Features</h2>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Feature</th>
+                            <th>Tata Models</th>
+                            <th>Ashok Leyland</th>
+                            <th>Mahindra Pickup</th>
+                            <th>Eicher</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Material</strong></td>
+                            <td>High-strength Steel</td>
+                            <td>Galvanized Steel</td>
+                            <td>Aluminum Composite</td>
+                            <td>Mild Steel</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Durability</strong></td>
+                            <td>★★★★☆</td>
+                            <td>★★★★★</td>
+                            <td>★★★★☆</td>
+                            <td>★★★★☆</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Weight Capacity</strong></td>
+                            <td>Up to 15 tons</td>
+                            <td>Up to 25 tons</td>
+                            <td>Up to 1.5 tons</td>
+                            <td>Up to 10 tons</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Weather Resistance</strong></td>
+                            <td>★★★★☆</td>
+                            <td>★★★★☆</td>
+                            <td>★★★★★</td>
+                            <td>★★★☆☆</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Warranty</strong></td>
+                            <td>2 Years</td>
+                            <td>3 Years</td>
+                            <td>2 Years</td>
+                            <td>2 Years</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="container mb-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="bg-dark text-light rounded-3 p-5 text-center" data-aos="fade-up">
+                <h3 class="fw-bold mb-3">Need a custom truck body for your vehicle?</h3>
+                <p class="mb-4">Schedule a consultation with our design team for a tailored truck body solution</p>
+                <a href="/contact" class="btn btn-danger btn-lg px-4">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.model-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.model-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+}
+.card-img-top {
+    height: 220px;
+    object-fit: cover;
+}
+@media (max-width: 767px) {
+    .card-img-top {
+        height: 180px;
+    }
+}
+</style>
+{% endblock %}

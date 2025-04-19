@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Header Section -->
+<section class="bg-dark text-light py-5 mb-5">
+    <div class="container text-center" data-aos="fade-up">
+        <h1 class="display-4 fw-bold">Custom <span class="text-danger">Order</span></h1>
+        <p class="lead">Request a custom truck body design tailored to your specifications</p>
+    </div>
+</section>
+
+<!-- Form Section -->
+<section class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8" data-aos="fade-up">
+            <div class="card border-0 shadow-lg rounded-3">
+                <div class="card-body p-4 p-md-5">
+                    <form action="/add-truck" method="POST" enctype="multipart/form-data">
+                        <div class="row g-4">
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Truck Type <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-truck text-danger"></i>
+                                    </span>
+                                    <input type="text" name="model" class="form-control" placeholder="E.g., Transport, Container, Tanker, etc." required />
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Required Specifications <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-cogs text-danger"></i>
+                                    </span>
+                                    <textarea name="specs" class="form-control" rows="4" placeholder="Please specify dimensions, materials, special features, load requirements, etc." required></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Delivery Location <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-map-marker-alt text-danger"></i>
+                                    </span>
+                                    <input type="text" name="location" class="form-control" placeholder="Enter delivery location" required />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Expected Timeline</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-calendar-alt text-danger"></i>
+                                    </span>
+                                    <input type="text" name="timeline" class="form-control" placeholder="Expected completion timeline" />
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Reference Images (Optional)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-image text-danger"></i>
+                                    </span>
+                                    <input type="file" name="image" class="form-control" />
+                                </div>
+                                <div class="form-text text-muted">Upload reference images or design inspiration (JPEG, PNG formats)</div>
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-danger btn-lg">
+                                        <i class="fas fa-paper-plane me-2"></i> Submit Request
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose RMB Section -->
+<section class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 bg-light shadow-sm rounded-3" data-aos="fade-up">
+                <div class="card-body p-4">
+                    <h4 class="card-title fw-bold"><i class="fas fa-award text-danger me-2"></i> Why Choose Rajesh Motor Body</h4>
+                    <ul class="list-group list-group-flush bg-transparent">
+                        <li class="list-group-item bg-transparent d-flex align-items-center">
+                            <i class="fas fa-check-circle text-danger me-2"></i>
+                            <span>Over 25 years of experience in premium truck body manufacturing</span>
+                        </li>
+                        <li class="list-group-item bg-transparent d-flex align-items-center">
+                            <i class="fas fa-check-circle text-danger me-2"></i>
+                            <span>Expert craftsmen using high-quality materials for durability</span>
+                        </li>
+                        <li class="list-group-item bg-transparent d-flex align-items-center">
+                            <i class="fas fa-check-circle text-danger me-2"></i>
+                            <span>Customized solutions tailored to your specific requirements</span>
+                        </li>
+                        <li class="list-group-item bg-transparent d-flex align-items-center">
+                            <i class="fas fa-check-circle text-danger me-2"></i>
+                            <span>Industry-leading warranty and after-sales support</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

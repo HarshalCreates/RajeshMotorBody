@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Hero Section -->
+<section id="hero" class="py-5 bg-dark text-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h1 class="display-4 fw-bold mb-3">Rajesh Motor Body <span class="text-danger">(RMB)</span></h1>
+                <p class="lead mb-4">Experience premium truck body craftsmanship with our exceptional designs, detailed specifications, and professional service.</p>
+                <div class="d-flex gap-3">
+                    <a href="/gallery" class="btn btn-danger btn-lg">View Gallery</a>
+                    <a href="/models" class="btn btn-outline-light btn-lg">Explore Models</a>
+                </div>
+            </div>
+            <div class="col-lg-6 mt-5 mt-lg-0" data-aos="fade-left">
+                <img src="https://images.unsplash.com/photo-1511282640361-d52dbdc789c8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Featured Truck" class="img-fluid rounded-3 shadow">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="fw-bold">Why Choose <span class="text-danger">RMB?</span></h2>
+            <p class="lead text-muted">Excellence in truck body manufacturing since 1995</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-danger text-white rounded-circle mb-4">
+                            <i class="fas fa-truck fa-2x p-3"></i>
+                        </div>
+                        <h4 class="card-title">Premium Designs</h4>
+                        <p class="card-text text-muted">Expertly crafted truck bodies with attention to detail, durability, and aesthetic excellence.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-danger text-white rounded-circle mb-4">
+                            <i class="fas fa-tools fa-2x p-3"></i>
+                        </div>
+                        <h4 class="card-title">Expert Craftsmanship</h4>
+                        <p class="card-text text-muted">Our team of skilled professionals ensures the highest quality in every truck body we create.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-danger text-white rounded-circle mb-4">
+                            <i class="fas fa-certificate fa-2x p-3"></i>
+                        </div>
+                        <h4 class="card-title">Quality Assurance</h4>
+                        <p class="card-text text-muted">We guarantee exceptional quality and durability with our rigorous standards and testing.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="p-5 bg-danger text-white rounded-3 shadow" data-aos="zoom-in">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h3 class="fw-bold mb-3">Need a custom truck body solution?</h3>
+                            <p class="mb-md-0">Share your requirements with us, and we'll create the perfect truck body to meet your needs.</p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-4 mt-md-0">
+                            <a href="/contact" class="btn btn-outline-light btn-lg px-4 fw-bold">Contact Us</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
