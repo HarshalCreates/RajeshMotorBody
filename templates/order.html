@@ -3,8 +3,8 @@
 <!-- Header Section -->
 <section class="bg-dark text-light py-5 mb-5">
     <div class="container text-center" data-aos="fade-up">
-        <h1 class="display-4 fw-bold">Custom <span class="text-danger">Order</span></h1>
-        <p class="lead">Request a custom truck body design tailored to your specifications</p>
+        <h1 class="display-4 fw-bold">Order <span class="text-danger">Now</span></h1>
+        <p class="lead">Request a truck body design tailored to your specifications</p>
     </div>
 </section>
 
@@ -14,7 +14,12 @@
         <div class="col-lg-8" data-aos="fade-up">
             <div class="card border-0 shadow-lg rounded-3">
                 <div class="card-body p-4 p-md-5">
-                    <form action="/add-truck" method="POST" enctype="multipart/form-data">
+                    <!-- Form submits directly to Formspree -->
+                    <form action="https://formspree.io/f/mdkgnnae" method="POST" enctype="multipart/form-data" id="orderForm">
+                        <!-- Hidden redirect field -->
+                        <input type="hidden" name="_next" value="http://{{ request.host }}/order-thank-you">
+                        <input type="hidden" name="_subject" value="New Truck Order Request">
+                        
                         <div class="row g-4">
                             <div class="col-12">
                                 <label class="form-label fw-bold">Truck Type <span class="text-danger">*</span></label>
@@ -22,7 +27,7 @@
                                     <span class="input-group-text bg-light">
                                         <i class="fas fa-truck text-danger"></i>
                                     </span>
-                                    <input type="text" name="model" class="form-control" placeholder="E.g., Transport, Container, Tanker, etc." required />
+                                    <input type="text" name="model" class="form-control" placeholder="E.g., Transport, Container, Tanker, etc." required value="{{ request.args.get('model', '') }}" />
                                 </div>
                             </div>
 
@@ -33,6 +38,26 @@
                                         <i class="fas fa-cogs text-danger"></i>
                                     </span>
                                     <textarea name="specs" class="form-control" rows="4" placeholder="Please specify dimensions, materials, special features, load requirements, etc." required></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Your Email <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-envelope text-danger"></i>
+                                    </span>
+                                    <input type="email" name="email" class="form-control" placeholder="Your email address" required />
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Your Phone <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-phone text-danger"></i>
+                                    </span>
+                                    <input type="tel" name="phone" class="form-control" placeholder="Your phone number" required />
                                 </div>
                             </div>
 
@@ -62,9 +87,10 @@
                                     <span class="input-group-text bg-light">
                                         <i class="fas fa-image text-danger"></i>
                                     </span>
-                                    <input type="file" name="image" class="form-control" />
+                                    <input type="file" name="image" class="form-control" accept="image/*" />
                                 </div>
                                 <div class="form-text text-muted">Upload reference images or design inspiration (JPEG, PNG formats)</div>
+                                <div id="image-preview-container" class="mt-2"></div>
                             </div>
 
                             <div class="col-12 mt-4">
@@ -113,3 +139,66 @@
     </div>
 </section>
 {% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Image preview functionality
+        const imageInput = document.querySelector('input[name="image"]');
+        const previewContainer = document.getElementById('image-preview-container');
+        
+        if (imageInput) {
+            imageInput.addEventListener('change', function() {
+                previewContainer.innerHTML = '';
+                
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'img-fluid rounded';
+                        img.style.maxHeight = '150px';
+                        previewContainer.appendChild(img);
+                    }
+                    
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        }
+        
+        // Suggest specifications based on model
+        const modelInput = document.querySelector('input[name="model"]');
+        const specsTextarea = document.querySelector('textarea[name="specs"]');
+        
+        if (modelInput && specsTextarea) {
+            modelInput.addEventListener('change', function() {
+                const modelValue = this.value.toLowerCase();
+                
+                // Only suggest if specs are empty
+                if (!specsTextarea.value.trim()) {
+                    if (modelValue.includes('tata') || modelValue.includes('lpt')) {
+                        specsTextarea.value = 'Tata LPT truck body with high-strength steel cargo body. Looking for dimensions approximately 24ft x 8ft x 7ft with load capacity around 15 tons.';
+                    } else if (modelValue.includes('ashok') || modelValue.includes('leyland') || modelValue.includes('ecomet')) {
+                        specsTextarea.value = 'Ashok Leyland Ecomet truck body with galvanized steel construction. Dimensions around 22ft x 7.5ft x 7ft with load capacity up to 25 tons.';
+                    } else if (modelValue.includes('mahindra') || modelValue.includes('bolero') || modelValue.includes('pickup')) {
+                        specsTextarea.value = 'Mahindra Bolero Pickup body with aluminum composite panels. Dimensions approximately 9ft x 5.5ft x 5ft with load capacity up to 1.5 tons.';
+                    } else if (modelValue.includes('eicher') || modelValue.includes('pro')) {
+                        specsTextarea.value = 'Eicher Pro truck body with mild steel reinforced frame. Dimensions around 19ft x 7ft x 7ft with load capacity up to 10 tons.';
+                    } else if (modelValue.includes('tipper') || modelValue.includes('dumper')) {
+                        specsTextarea.value = 'Tipper/Dumper body with heavy-duty steel and abrasion-resistant lining. Hydraulic system with load capacity between 10-30 tons.';
+                    } else if (modelValue.includes('tata') || modelValue.includes('ace')) {
+                        specsTextarea.value = 'Tata Ace truck body with lightweight steel construction. Dimensions approximately 8.2ft x 5.3ft x 5.5ft with load capacity up to 1 ton.';
+                    }
+                }
+            });
+            
+            // Trigger change event if model is already filled (from URL parameter)
+            if (modelInput.value) {
+                const event = new Event('change');
+                modelInput.dispatchEvent(event);
+            }
+        }
+    });
+</script>
+{% endblock %} 

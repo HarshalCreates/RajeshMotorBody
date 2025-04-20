@@ -1,11 +1,25 @@
 # app.py
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 import os
 from werkzeug.utils import secure_filename
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from datetime import datetime
+import urllib.parse
+import requests
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'  # needed for flash messages
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Email configuration
+ADMIN_EMAIL = 'rajeshmoterbody@gmail.com'  # Replace with your email
+ADMIN_PHONE = '+919824020762'  # Replace with your WhatsApp number (with country code)
+
+# For simpler email sending without SMTP setup, we'll use Formspree
+FORMSPREE_ID = 'mdkgnnae'  # Replace with your Formspree form ID after signing up at formspree.io
 
 # Create upload folder if it doesn't exist
 if not os.path.exists(UPLOAD_FOLDER):
@@ -23,11 +37,173 @@ for img_path in required_images:
     if not os.path.exists(img_path):
         print(f"WARNING: Required image file {img_path} not found!")
 
+# Function to send email
+def send_order_email(order_info):
+    try:
+        # Create message
+        msg = MIMEMultipart()
+        msg['From'] = ADMIN_EMAIL
+        msg['To'] = ADMIN_EMAIL
+        msg['Subject'] = f"New Truck Order: {order_info['model']}"
+        
+        # Create email body with order details
+        body = f"""
+        <html>
+        <body>
+            <h2>New Truck Order Received</h2>
+            <p><strong>Order Date:</strong> {order_info['order_date']}</p>
+            <p><strong>Truck Type:</strong> {order_info['model']}</p>
+            <p><strong>Specifications:</strong> {order_info['specs']}</p>
+            <p><strong>Delivery Location:</strong> {order_info['location']}</p>
+            <p><strong>Expected Timeline:</strong> {order_info['timeline']}</p>
+        </body>
+        </html>
+        """
+        
+        msg.attach(MIMEText(body, 'html'))
+        
+        # Connect to server and send email
+        print(f"Attempting to send email to {ADMIN_EMAIL}...")
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.set_debuglevel(1)  # Enable debug output
+        server.starttls()
+        
+        try:
+            server.login(ADMIN_EMAIL, 'Sanvi@123')
+            text = msg.as_string()
+            server.sendmail(ADMIN_EMAIL, ADMIN_EMAIL, text)
+            print("Email sent successfully!")
+            return True
+        except Exception as login_error:
+            print(f"SMTP Authentication Error: {login_error}")
+            
+            # If you want a more reliable alternative without SMTP setup:
+            # Consider using a service like Resend.com (they have a free tier)
+            # 1. Sign up at https://resend.com
+            # 2. Get your API key
+            # 3. Install the resend library: pip install resend
+            # 4. Uncomment and modify the code below:
+            
+            """
+            import resend
+            resend.api_key = "re_123YourResendAPIKey"
+            
+            try:
+                r = resend.Emails.send({
+                    "from": "onboarding@resend.dev",
+                    "to": ADMIN_EMAIL,
+                    "subject": f"New Truck Order: {order_info['model']}",
+                    "html": body
+                })
+                print("Email sent using Resend!")
+                return True
+            except Exception as resend_error:
+                print(f"Resend API Error: {resend_error}")
+                return False
+            """
+            
+            return False
+        finally:
+            server.quit()
+        
+    except Exception as e:
+        print(f"Error sending email: {e}")
+        return False
+
+# Function to generate WhatsApp link with order details
+def get_whatsapp_link(order_info):
+    # Create message text
+    message = f"""New Truck Order:
+Order Date: {order_info['order_date']}
+Truck Type: {order_info['model']}
+Specifications: {order_info['specs']}
+Location: {order_info['location']}
+Timeline: {order_info['timeline']}"""
+    
+    # URL encode the message
+    encoded_message = urllib.parse.quote(message)
+    
+    # Create WhatsApp API link
+    whatsapp_link = f"https://api.whatsapp.com/send?phone={ADMIN_PHONE}&text={encoded_message}"
+    
+    return whatsapp_link
+
 # Store truck data
 truck_data = []
 
 # Sample truck models data
 truck_models = {
+    "eicher-curtain": {
+        "name": "Eicher Sliding Curtain",
+        "brand": "Eicher",
+        "category": "Specialized",
+        "rating": 4.7,
+        "reviews": 15,
+        "warranty": "2 Years",
+        "material": "Aluminum frame with reinforced PVC curtain sides",
+        "dimensions": "22ft x 7.5ft x 8ft (LxWxH)",
+        "capacity": "Up to 12 tons",
+        "location": "Dabhan, Gujarat",
+        "compatible_chassis": "Eicher Pro 3015, 3019, 4019, 5025 series",
+        "main_image": "/static/images/SlidingCurtain.png",
+        "gallery_images": [
+            {
+                "url": "https://5.imimg.com/data5/SELLER/Default/2022/1/XR/ZU/PN/108537223/eicher-pro-3015-truck-1000x1000.png",
+                "caption": "Eicher Sliding Curtain Front View"
+            },
+            {
+                "url": "https://5.imimg.com/data5/SELLER/Default/2021/10/OO/ME/DD/36130494/eicher-pro-3015-truck-1000x1000.jpg",
+                "caption": "Eicher Sliding Curtain Side View"
+            },
+            {
+                "url": "https://5.imimg.com/data5/ANDROID/Default/2021/11/KK/MM/GJ/46481591/product-jpeg-1000x1000.jpg",
+                "caption": "Eicher Sliding Curtain with Open Side"
+            },
+            {
+                "url": "https://5.imimg.com/data5/SELLER/Default/2023/7/332186088/QR/XL/JQ/182158761/eicher-3015-truck-1000x1000.jpg",
+                "caption": "Eicher Pro Full Vehicle"
+            }
+        ],
+        "features": [
+            {
+                "icon": "fas fa-door-open",
+                "title": "Easy Side Access",
+                "description": "Sliding curtain sides allow for full-length access to the cargo area from both sides"
+            },
+            {
+                "icon": "fas fa-shield-alt",
+                "title": "Weather Protection",
+                "description": "High-quality PVC curtains provide protection from weather while maintaining easy access"
+            },
+            {
+                "icon": "fas fa-dolly",
+                "title": "Efficient Loading",
+                "description": "Side access enables forklift loading from any angle, drastically reducing loading times"
+            }
+        ],
+        "custom_options": [
+            {
+                "title": "Standard Curtain",
+                "description": "Basic sliding curtain setup with manual operation and secure locking",
+                "image": "https://5.imimg.com/data5/SELLER/Default/2021/10/OO/ME/DD/36130494/eicher-pro-3015-truck-1000x1000.jpg"
+            },
+            {
+                "title": "Premium Curtain",
+                "description": "Enhanced curtain material with better tear resistance and UV protection",
+                "image": "https://5.imimg.com/data5/ANDROID/Default/2021/11/KK/MM/GJ/46481591/product-jpeg-1000x1000.jpg"
+            },
+            {
+                "title": "Dual-height System",
+                "description": "Adjustable roof height to accommodate taller cargo when needed",
+                "image": "https://5.imimg.com/data5/SELLER/Default/2022/1/XR/ZU/PN/108537223/eicher-pro-3015-truck-1000x1000.png"
+            },
+            {
+                "title": "Combo Access",
+                "description": "Combined sliding curtain sides with rear door access for maximum loading flexibility",
+                "image": "https://5.imimg.com/data5/SELLER/Default/2023/7/332186088/QR/XL/JQ/182158761/eicher-3015-truck-1000x1000.jpg"
+            }
+        ]
+    },
     "tata-lpt": {
         "name": "Tata LPT 1613",
         "brand": "Tata",
@@ -38,9 +214,9 @@ truck_models = {
         "material": "High-strength steel cargo body",
         "dimensions": "24ft x 8ft x 7ft (LxWxH)",
         "capacity": "Up to 15 tons",
-        "location": "Delhi",
+        "location": "Dabhan, Gujarat",
         "compatible_chassis": "Tata LPT 1613, 1615, 1618 series",
-        "main_image": "https://5.imimg.com/data5/SELLER/Default/2023/4/SU/QD/WZ/80849576/tata-3618-tip-trailer-1000x1000.jpg",
+        "main_image": "static/images/truck-removebg-preview.png",
         "gallery_images": [
             {
                 "url": "https://5.imimg.com/data5/SELLER/Default/2023/4/SU/QD/WZ/80849576/tata-3618-tip-trailer-1000x1000.jpg",
@@ -99,6 +275,77 @@ truck_models = {
             }
         ]
     },
+    "container": {
+        "name": "Multi-Brand Container Body",
+        "brand": "Multi-brand",
+        "category": "Specialized",
+        "rating": 4.8,
+        "reviews": 32,
+        "warranty": "3 Years",
+        "material": "Industrial-grade steel with anti-corrosion treatment",
+        "dimensions": "20ft/24ft/32ft x 8ft x 8.5ft (LxWxH)",
+        "capacity": "Up to 30 tons depending on configuration",
+        "location": "Dabhan, Gujarat",
+        "compatible_chassis": "Tata, Ashok Leyland, BharatBenz, Eicher, and more",
+        "main_image": "static/images/container-removebg-preview.png",
+        "gallery_images": [
+            {
+                "url": "https://5.imimg.com/data5/SELLER/Default/2022/3/DL/CH/KA/41051223/tata-1613-container-body-1000x1000.jpg",
+                "caption": "Standard Container Body - Front View"
+            },
+            {
+                "url": "https://5.imimg.com/data5/SELLER/Default/2023/2/GB/WV/LI/24055954/eicher-box-truck-1000x1000.jpg",
+                "caption": "Eicher Pro Container Configuration"
+            },
+            {
+                "url": "https://5.imimg.com/data5/SELLER/Default/2022/6/WN/XH/ZC/112442360/tata-container-body-1000x1000.png",
+                "caption": "Tata Container Body - Side View"
+            },
+            {
+                "url": "https://5.imimg.com/data5/SELLER/Default/2021/11/KS/LJ/UG/99306635/ashok-leyland-1616-container-body-1000x1000.jpeg",
+                "caption": "Ashok Leyland Container Body"
+            }
+        ],
+        "features": [
+            {
+                "icon": "fas fa-lock",
+                "title": "Advanced Security",
+                "description": "Multi-point locking system with tamper-proof design for maximum cargo security"
+            },
+            {
+                "icon": "fas fa-cloud-rain",
+                "title": "Weather Protection",
+                "description": "Fully sealed design with waterproof construction for all-weather transport"
+            },
+            {
+                "icon": "fas fa-exchange-alt",
+                "title": "Versatile Access",
+                "description": "Available with rear door, side door, or roll-up door configurations for flexible loading"
+            }
+        ],
+        "custom_options": [
+            {
+                "title": "Standard Container",
+                "description": "Fully enclosed cargo space with rear-door access and secure locking system",
+                "image": "https://5.imimg.com/data5/SELLER/Default/2022/3/DL/CH/KA/41051223/tata-1613-container-body-1000x1000.jpg"
+            },
+            {
+                "title": "High-Cube Container",
+                "description": "Extended height container for increased volume capacity and bulky items",
+                "image": "https://5.imimg.com/data5/SELLER/Default/2022/6/WN/XH/ZC/112442360/tata-container-body-1000x1000.png"
+            },
+            {
+                "title": "Side-Access Container",
+                "description": "Container with additional side door access for convenient loading and unloading",
+                "image": "https://5.imimg.com/data5/SELLER/Default/2021/11/KS/LJ/UG/99306635/ashok-leyland-1616-container-body-1000x1000.jpeg"
+            },
+            {
+                "title": "Insulated Container",
+                "description": "Temperature-stable container with specialized insulation for sensitive cargo",
+                "image": "https://5.imimg.com/data5/SELLER/Default/2022/7/BF/GC/LM/152879492/refrigerated-truck-body-1000x1000.jpg"
+            }
+        ]
+    },
     "ashok-leyland": {
         "name": "Ashok Leyland Ecomet",
         "brand": "Ashok Leyland",
@@ -109,9 +356,9 @@ truck_models = {
         "material": "Galvanized steel construction",
         "dimensions": "22ft x 7.5ft x 7ft (LxWxH)",
         "capacity": "Up to 25 tons",
-        "location": "Mumbai",
+        "location": "Dabhan, Gujarat",
         "compatible_chassis": "Ashok Leyland Ecomet 1115, 1215, 1415 series",
-        "main_image": "https://5.imimg.com/data5/ANDROID/Default/2022/2/CS/VI/GZ/41617752/product-jpeg-1000x1000.jpg",
+        "main_image": "static/images/Ashok.png",
         "gallery_images": [
             {
                 "url": "https://5.imimg.com/data5/ANDROID/Default/2022/2/CS/VI/GZ/41617752/product-jpeg-1000x1000.jpg",
@@ -180,7 +427,7 @@ truck_models = {
         "material": "Aluminum composite panels",
         "dimensions": "9ft x 5.5ft x 5ft (LxWxH)",
         "capacity": "Up to 1.5 tons",
-        "location": "Gujarat",
+        "location": "Dabhan, Gujarat",
         "compatible_chassis": "Mahindra Bolero Pickup, Bolero Maxi Truck, Bolero Pik-Up FB",
         "main_image": "/static/images/Pickupp.png",
         "gallery_images": [
@@ -251,7 +498,7 @@ truck_models = {
         "material": "Mild steel with reinforced frame",
         "dimensions": "19ft x 7ft x 7ft (LxWxH)",
         "capacity": "Up to 10 tons",
-        "location": "Chennai",
+        "location": "Dabhan, Gujarat",
         "compatible_chassis": "Eicher Pro 3015, 3014, 3016 series",
         "main_image": "/static/images/Eicherr.png",
         "gallery_images": [
@@ -322,7 +569,7 @@ truck_models = {
         "material": "Lightweight steel with rust-resistant coating",
         "dimensions": "8.2ft x 5.3ft x 5.5ft (LxWxH)",
         "capacity": "Up to 1 ton",
-        "location": "Delhi",
+        "location": "Dabhan, Gujarat",
         "compatible_chassis": "Tata Ace, Ace Zip, Ace Mega, Super Ace",
         "main_image": "/static/images/TataAce.png",
         "gallery_images": [
@@ -393,7 +640,7 @@ truck_models = {
         "material": "Heavy-duty steel with abrasion-resistant lining",
         "dimensions": "Customizable to chassis",
         "capacity": "10-30 tons depending on configuration",
-        "location": "Pune",
+        "location": "Dabhan, Gujarat",
         "compatible_chassis": "Tata, Ashok Leyland, Eicher, BharatBenz, and more",
         "main_image": "/static/images/Dumper.png",
         "gallery_images": [
@@ -473,37 +720,255 @@ def model_detail(model_id):
     if not model:
         return redirect('/models')
     
-    return render_template('model_detail.html', model=model)
+    # Add analytics tracking (optional)
+    # Log the model view if needed
+    
+    # Render the template with the model data and model_id
+    return render_template('model_detail.html', model=model, model_id=model_id, truck_models=truck_models)
 
 @app.route('/gallery')
 def gallery():
     return render_template('gallery.html')
 
+@app.route('/setup-formspree')
+def setup_formspree():
+    """Helper route to set up Formspree for the first time"""
+    return render_template('setup_formspree.html', admin_email=ADMIN_EMAIL, FORMSPREE_ID=FORMSPREE_ID)
+
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
 
-@app.route('/add-truck', methods=['GET', 'POST'])
-def add_truck():
+@app.route('/submit-contact', methods=['POST'])
+def submit_contact():
+    if request.method == 'POST':
+        # Get form data
+        name = request.form.get('name', '')
+        email = request.form.get('email', '')
+        phone = request.form.get('phone', '')
+        subject = request.form.get('subject', '')
+        message = request.form.get('message', '')
+        
+        # Create formatted message for WhatsApp
+        whatsapp_message = f"""Contact Form Submission:
+Name: {name}
+Email: {email}
+Phone: {phone}
+Subject: {subject}
+Message: {message}
+        """
+        
+        # Create WhatsApp link with the contact info
+        encoded_message = urllib.parse.quote(whatsapp_message)
+        whatsapp_link = f"https://api.whatsapp.com/send?phone={ADMIN_PHONE}&text={encoded_message}"
+        
+        # Store email data for Formspree
+        form_data = {
+            'name': name,
+            'email': email,
+            'phone': phone,
+            'subject': subject,
+            'message': message
+        }
+        
+        # Formspree URL for the backup/alternative email method
+        formspree_url = f"https://formspree.io/f/{FORMSPREE_ID}"
+        
+        # Show confirmation page with WhatsApp link and form data for email
+        flash('Your message has been sent successfully!', 'success')
+        return render_template('contact_success.html', 
+                              whatsapp_link=whatsapp_link,
+                              formspree_url=formspree_url,
+                              form_data=form_data)
+
+@app.route('/order', methods=['GET', 'POST'])
+def order():
     if request.method == 'POST':
         model = request.form['model']
         specs = request.form['specs']
         location = request.form['location']
+        timeline = request.form.get('timeline', 'Not specified')
+        email = request.form.get('email', '')
+        phone = request.form.get('phone', '')
         image = request.files['image']
-
-        if image:
-            filename = secure_filename(image.filename)
+        
+        # Create a unique filename for the image to prevent overwriting
+        if image and image.filename:
+            filename = secure_filename(f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{image.filename}")
             image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             image.save(image_path)
+            full_image_url = request.url_root.rstrip('/') + '/' + image_path
+            relative_image_url = '/' + image_path
+        else:
+            full_image_url = None
+            relative_image_url = None
 
-            truck_data.append({
-                'model': model,
-                'specs': specs,
-                'location': location,
-                'image_url': '/' + image_path
-            })
-        return redirect(url_for('home'))
-    return render_template('add_truck.html')
+        # Save order details
+        truck_info = {
+            'model': model,
+            'specs': specs,
+            'location': location,
+            'timeline': timeline,
+            'email': email,
+            'phone': phone,
+            'image_url': relative_image_url,
+            'order_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        }
+        
+        # Save to in-memory list
+        truck_data.append(truck_info)
+        
+        # Generate WhatsApp link for the order
+        whatsapp_message = f"""New Truck Order:
+Model: {model}
+Specifications: {specs}
+Location: {location}
+Timeline: {timeline}
+Email: {email}
+Phone: {phone}
+Order Date: {truck_info['order_date']}"""
+        
+        if full_image_url:
+            whatsapp_message += f"\nImage: {full_image_url}"
+        
+        encoded_message = urllib.parse.quote(whatsapp_message)
+        whatsapp_link = f"https://api.whatsapp.com/send?phone={ADMIN_PHONE}&text={encoded_message}"
+        
+        # Prepare data for Formspree
+        email_message = f"""
+Model: {model}
+Specifications: {specs}
+Location: {location}
+Timeline: {timeline}
+Order Date: {truck_info['order_date']}
+
+Customer Contact:
+Email: {email}
+Phone: {phone}
+"""
+        if full_image_url:
+            email_message += f"\nImage URL: {full_image_url}"
+        
+        # For emails, use Formspree
+        formspree_url = f"https://formspree.io/f/{FORMSPREE_ID}"
+        
+        # Try to directly send to Formspree via API if possible
+        try:
+            # Formspree API endpoint
+            formspree_endpoint = f"https://formspree.io/f/{FORMSPREE_ID}"
+            
+            # Data to send
+            form_data = {
+                'name': f"Order: {model}",
+                'email': email,
+                'phone': phone,
+                'subject': f"New Truck Order: {model}",
+                'message': email_message,
+            }
+            
+            if full_image_url:
+                form_data['image_url'] = full_image_url
+                
+            # Send data to Formspree
+            response = requests.post(
+                formspree_endpoint,
+                data=form_data,
+                headers={
+                    'Accept': 'application/json',
+                    'Referer': request.base_url
+                }
+            )
+            
+            if response.status_code == 200:
+                print("Email sent directly to Formspree API!")
+            else:
+                print(f"Formspree API error: {response.status_code}")
+                
+        except Exception as e:
+            print(f"Error sending to Formspree: {e}")
+        
+        # Show confirmation page with WhatsApp link
+        flash('Your order has been successfully submitted! Our team will contact you soon.', 'success')
+            
+        return render_template(
+            'order_confirmation.html', 
+            truck_info=truck_info,
+            whatsapp_link=whatsapp_link,
+            formspree_url=formspree_url,
+            form_data={
+                'name': f"Order: {model}",
+                'email': email,
+                'phone': phone,
+                'subject': f"New Truck Order: {model}",
+                'message': email_message,
+                'image_url': full_image_url
+            }
+        )
+    
+    # For GET requests, just render the form
+    # If model is provided in URL parameters, it will be handled by the template
+    selected_model = request.args.get('model', '')
+    return render_template('order.html', selected_model=selected_model)
+
+@app.route('/order-thank-you')
+def order_thank_you():
+    """
+    Handle redirect from Formspree after form submission.
+    This shows the confirmation page after Formspree processes the form.
+    """
+    # Get form data from query parameters (Formspree includes them in the redirect)
+    model = request.args.get('model', 'Not specified')
+    specs = request.args.get('specs', 'Not specified')
+    location = request.args.get('location', 'Not specified')
+    timeline = request.args.get('timeline', 'Not specified')
+    email = request.args.get('email', 'Not provided')
+    phone = request.args.get('phone', 'Not provided')
+    
+    # Create truck info object
+    truck_info = {
+        'model': model,
+        'specs': specs,
+        'location': location,
+        'timeline': timeline,
+        'email': email,
+        'phone': phone,
+        'image_url': None,  # Images don't get redirected from Formspree
+        'order_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    }
+    
+    # Generate WhatsApp link
+    whatsapp_message = f"""New Truck Order:
+Model: {model}
+Specifications: {specs}
+Location: {location}
+Timeline: {timeline}
+Email: {email}
+Phone: {phone}
+Order Date: {truck_info['order_date']}"""
+    
+    encoded_message = urllib.parse.quote(whatsapp_message)
+    whatsapp_link = f"https://api.whatsapp.com/send?phone={ADMIN_PHONE}&text={encoded_message}"
+    
+    # Formspree URL for reference
+    formspree_url = f"https://formspree.io/f/{FORMSPREE_ID}"
+    
+    # Show success message
+    flash('Your order has been successfully submitted! Our team will contact you soon.', 'success')
+    
+    # Return confirmation template
+    return render_template(
+        'order_confirmation.html',
+        truck_info=truck_info,
+        whatsapp_link=whatsapp_link,
+        formspree_url=formspree_url,
+        form_data={
+            'name': f"Order: {model}",
+            'email': email,
+            'phone': phone,
+            'subject': f"New Truck Order: {model}",
+            'message': "Order submitted via Formspree"
+        }
+    )
 
 if __name__ == '__main__':
     # Load existing images

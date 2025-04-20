@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg rounded-3">
+                <div class="card-body p-4 p-md-5">
+                    <h2 class="mb-4">Formspree Setup for Email Notifications</h2>
+                    
+                    <div class="alert alert-info">
+                        <p>This page helps you set up email notifications for your contact forms. Follow these steps:</p>
+                    </div>
+                    
+                    <ol class="mb-4">
+                        <li class="mb-3">Go to <a href="https://formspree.io/register" target="_blank">formspree.io</a> and sign up for a free account</li>
+                        <li class="mb-3">After signing in, click "New Form" and give it a name (e.g., "Rajesh Motor Body Contact")</li>
+                        <li class="mb-3">Use this email address for notifications: <strong>{{ admin_email }}</strong></li>
+                        <li class="mb-3">After creating the form, you'll get a form ID (looks like "xrgvwpao")</li>
+                        <li class="mb-3">Update your <code>app.py</code> file and replace the <code>FORMSPREE_ID</code> value with your new form ID</li>
+                    </ol>
+                    
+                    <div class="alert alert-warning">
+                        <p><strong>Important:</strong> The first time someone submits your form, you'll receive a confirmation email from Formspree. You MUST confirm this email to start receiving notifications.</p>
+                    </div>
+                    
+                    <h3 class="mt-5 mb-3">Test Your Form</h3>
+                    <p>Submit this test form to verify your Formspree integration is working:</p>
+                    
+                    <form action="https://formspree.io/f/{{ FORMSPREE_ID }}" method="POST" class="mt-4">
+                        <div class="mb-3">
+                            <label class="form-label">Your Name</label>
+                            <input type="text" name="name" class="form-control" value="Test User">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Your Email</label>
+                            <input type="email" name="email" class="form-control" value="{{ admin_email }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Message</label>
+                            <textarea name="message" class="form-control">This is a test message from the Formspree setup page.</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Test Form</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 

@@ -9,6 +9,7 @@
   <title>{% block title %}Rajesh Motor Body | Premium Truck Showcase{% endblock %}</title>
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.ico') }}">
+  {% block head_extras %}{% endblock %}
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -59,10 +60,10 @@
         <div class="col-md-3">
           <h5 class="mb-3">Connect</h5>
           <div class="d-flex gap-3">
-            <a href="#" class="text-light fs-5"><i class="fab fa-facebook"></i></a>
-            <a href="#" class="text-light fs-5"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="text-light fs-5"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="text-light fs-5"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.facebook.com/rajeshmoterbody" target="_blank" class="text-light fs-5"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.instagram.com/rajeshmotorbody/" target="_blank" class="text-light fs-5"><i class="fab fa-instagram"></i></a>
+            <a href="https://twitter.com/RajeshMoterBody" target="_blank" class="text-light fs-5"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.youtube.com/@rajeshmoterbody" target="_blank" class="text-light fs-5"><i class="fab fa-youtube"></i></a>
           </div>
         </div>
       </div>

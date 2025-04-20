@@ -16,34 +16,38 @@
             <div class="card border-0 shadow-lg rounded-3">
                 <div class="card-body p-4 p-md-5">
                     <h3 class="fw-bold mb-4">Get In Touch</h3>
-                    <form>
+                    <form action="/submit-contact" method="POST">
+                        <!-- Removed hidden Formspree fallback -->
+                        
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">Full Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" placeholder="Your name">
+                                <div class="input-group">
+                                    <input type="text" name="name" class="form-control" placeholder="Your name" required>
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Email <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control" placeholder="Your email">
+                                <input type="email" name="email" class="form-control" placeholder="Your email" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Phone</label>
-                                <input type="tel" class="form-control" placeholder="Your phone number">
+                                <input type="tel" name="phone" class="form-control" placeholder="Your phone number">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Subject <span class="text-danger">*</span></label>
-                                <select class="form-select">
-                                    <option selected disabled>Select a subject</option>
-                                    <option>General Inquiry</option>
-                                    <option>Custom Truck Body</option>
-                                    <option>Service Request</option>
-                                    <option>Visit Showroom</option>
-                                    <option>Other</option>
+                                <select name="subject" class="form-select" required>
+                                    <option value="" selected disabled>Select a subject</option>
+                                    <option value="General Inquiry">General Inquiry</option>
+                                    <option value="Custom Truck Body">Custom Truck Body</option>
+                                    <option value="Service Request">Service Request</option>
+                                    <option value="Visit Showroom">Visit Showroom</option>
+                                    <option value="Other">Other</option>
                                 </select>
                             </div>
                             <div class="col-12">
                                 <label class="form-label">Message <span class="text-danger">*</span></label>
-                                <textarea class="form-control" rows="5" placeholder="Your message"></textarea>
+                                <textarea name="message" class="form-control" rows="5" placeholder="Your message" required></textarea>
                             </div>
                             <div class="col-12">
                                 <div class="d-grid">
@@ -72,7 +76,7 @@
                     <div class="ms-3">
                         <h5 class="mt-0 mb-1">Email Us</h5>
                         <p class="text-muted mb-0">
-                            <a href="mailto:info@rajeshmotorbody.com" class="text-decoration-none text-reset">info@rajeshmotorbody.com</a>
+                            <a href="mailto:rajeshmoterbody@gmail.com" class="text-decoration-none text-reset">rajeshmoterbody@gmail.com</a>
                         </p>
                     </div>
                 </div>
@@ -86,7 +90,7 @@
                     <div class="ms-3">
                         <h5 class="mt-0 mb-1">Call Us</h5>
                         <p class="text-muted mb-0">
-                            <a href="tel:+911234567890" class="text-decoration-none text-reset">+91 (123) 456-7890</a>
+                            <a href="tel:+919427087592" class="text-decoration-none text-reset">+91 9427087592</a>
                         </p>
                     </div>
                 </div>
@@ -100,8 +104,8 @@
                     <div class="ms-3">
                         <h5 class="mt-0 mb-1">Visit Us</h5>
                         <p class="text-muted mb-0">
-                            123 Industrial Area, Phase 2<br>
-                            Delhi, India - 110001
+                           Rajesh Motor Body Works, Near CNG Pump <br>
+                            Dabhan, Gujarat India - 387320
                         </p>
                     </div>
                 </div>
@@ -115,24 +119,24 @@
                     <div class="ms-3">
                         <h5 class="mt-0 mb-1">Working Hours</h5>
                         <p class="text-muted mb-0">
-                            Monday - Saturday: 9:00 AM - 6:00 PM<br>
-                            Sunday: Closed
+                            Monday - Sunday: 9:00 AM - 7:00 PM<br>
+                            
                         </p>
                     </div>
                 </div>
                 
                 <h5 class="mt-5 mb-3">Connect With Us</h5>
                 <div class="d-flex gap-3">
-                    <a href="#" class="btn btn-outline-danger rounded-circle">
+                    <a href="https://www.facebook.com/rajeshmoterbody" target="_blank" class="btn btn-outline-danger rounded-circle">
                         <i class="fab fa-facebook-f"></i>
                     </a>
-                    <a href="#" class="btn btn-outline-danger rounded-circle">
+                    <a href="https://twitter.com/RajeshMoterBody" target="_blank" class="btn btn-outline-danger rounded-circle">
                         <i class="fab fa-twitter"></i>
                     </a>
-                    <a href="#" class="btn btn-outline-danger rounded-circle">
+                    <a href="https://www.instagram.com/rajeshmotorbody/" target="_blank" class="btn btn-outline-danger rounded-circle">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="#" class="btn btn-outline-danger rounded-circle">
+                    <a href="https://www.linkedin.com/company/rajesh-moter-body/" target="_blank" class="btn btn-outline-danger rounded-circle">
                         <i class="fab fa-linkedin-in"></i>
                     </a>
                 </div>
@@ -146,7 +150,7 @@
     <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
         <div class="card-body p-0">
             <div class="ratio ratio-21x9">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3504.3231261972337!2d77.2271!3d28.5609!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce26f903969d7%3A0x8955b407581f2dd!2sDelhi%2C%20India!5e0!3m2!1sen!2s!4v1632222222222!5m2!1sen!2s" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3671.5429736639404!2d72.80751399999999!3d22.710466299999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e5bfce3b71ef9%3A0x3cf063e28846682f!2sRajesh%20Motors%20Body%20Works!5e0!3m2!1sen!2sin!4v1712477283043!5m2!1sen!2sin" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
         </div>
     </div>

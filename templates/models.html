@@ -39,7 +39,10 @@
             <a href="/models/{{ model_id }}" class="text-decoration-none">
                 <div class="card h-100 border-0 shadow-sm model-card">
                     <div class="position-relative">
-                        <img src="{{ model.main_image }}" class="card-img-top" alt="{{ model.name }}">
+                        <img src="{{ model.main_image }}" class="card-img-top" alt="{{ model.name }}"
+                        {% if model_id == 'eicher-curtain' %}
+                        style="height: 220px; object-fit: contain; padding: 10px;"
+                        {% endif %}>
                         {% if model.category in ['Premium', 'Bestseller'] %}
                         <span class="position-absolute top-0 start-0 badge bg-danger m-3">{{ model.category }}</span>
                         {% endif %}
@@ -159,9 +162,22 @@
 .card-img-top {
     height: 220px;
     object-fit: cover;
+    background-color: #ffffff;
+}
+/* Style for image containers to ensure consistent sizing */
+.position-relative {
+    height: 220px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
 }
 @media (max-width: 767px) {
     .card-img-top {
+        height: 180px;
+    }
+    .position-relative {
         height: 180px;
     }
 }

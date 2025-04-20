@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Confirmation Header -->
+<section class="bg-success text-light py-5 mb-5">
+    <div class="container text-center" data-aos="fade-up">
+        <i class="fas fa-check-circle fa-4x mb-3"></i>
+        <h1 class="display-4 fw-bold">Order <span class="text-white">Confirmed!</span></h1>
+        <p class="lead">Thank you for your order. We'll be in touch soon.</p>
+    </div>
+</section>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="container mb-4">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<!-- Hidden Email Form (with iframe target to prevent redirect) -->
+<form id="emailForm" action="{{ formspree_url }}" method="POST" target="formspree-frame" style="display:none;">
+    <input type="text" name="name" value="{{ form_data.name }}" />
+    <input type="email" name="email" value="{{ form_data.email }}" />
+    <input type="text" name="phone" value="{{ form_data.phone }}" />
+    <input type="text" name="subject" value="{{ form_data.subject }}" />
+    <textarea name="message">{{ form_data.message }}</textarea>
+    {% if form_data.image_url %}
+    <input type="text" name="image_url" value="{{ form_data.image_url }}" />
+    {% endif %}
+    <!-- Hidden Formspree ID field -->
+    <input type="hidden" name="_formspree_id" value="mdkgnnae">
+    <input type="text" name="_gotcha" style="display:none" />
+    <!-- Add a hidden field to prevent Formspree from redirecting -->
+    <input type="hidden" name="_next" value="about:blank">
+</form>
+<iframe name="formspree-frame" style="display:none;"></iframe>
+
+<!-- Direct email link as fallback option -->
+<div id="email-fallback" class="text-center mb-4" style="display: none;">
+    <div class="alert alert-info">
+        <p><strong>For your records:</strong> If you don't receive a confirmation email, please <a href="#" id="manual-email-btn" class="alert-link">click here</a> to ensure we receive your order details.</p>
+    </div>
+</div>
+
+<!-- Order Details Section -->
+<section class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8" data-aos="fade-up">
+            <div class="card border-0 shadow-lg rounded-3">
+                <div class="card-body p-4 p-md-5">
+                    <h3 class="card-title text-center mb-4">Order Details</h3>
+                    
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <p class="fw-bold">Truck Type:</p>
+                            <p>{{ truck_info.model }}</p>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <p class="fw-bold">Delivery Location:</p>
+                            <p>{{ truck_info.location }}</p>
+                        </div>
+                        
+                        <div class="col-12">
+                            <p class="fw-bold">Specifications:</p>
+                            <p>{{ truck_info.specs }}</p>
+                        </div>
+                        
+                        <div class="col-12">
+                            <p class="fw-bold">Expected Timeline:</p>
+                            <p>{{ truck_info.timeline }}</p>
+                        </div>
+                        
+                        {% if truck_info.image_url %}
+                        <div class="col-12 mt-3">
+                            <p class="fw-bold">Reference Image:</p>
+                            <img src="{{ truck_info.image_url }}" alt="Reference Image" class="img-fluid rounded" style="max-height: 300px;">
+                        </div>
+                        {% endif %}
+                        
+                        <div class="col-12 mt-4">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i> Our team will review your order and contact you within 24-48 hours to discuss details and provide a quote.
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 mt-3 text-center">
+                            <a href="/" class="btn btn-primary me-2">
+                                <i class="fas fa-home me-2"></i> Back to Home
+                            </a>
+                            <a href="{{ whatsapp_link }}" target="_blank" class="btn btn-success me-2">
+                                <i class="fab fa-whatsapp me-2"></i> Contact via WhatsApp
+                            </a>
+                            <a href="/models" class="btn btn-outline-dark">
+                                <i class="fas fa-truck me-2"></i> View Models
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- What's Next Section -->
+<section class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 bg-light shadow-sm rounded-3" data-aos="fade-up">
+                <div class="card-body p-4">
+                    <h4 class="card-title fw-bold mb-4"><i class="fas fa-clipboard-list text-danger me-2"></i> What Happens Next?</h4>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item d-flex mb-4">
+                            <div class="timeline-icon bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Initial Contact</h5>
+                                <p class="text-muted">Our team will call you to discuss your requirements in detail.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item d-flex mb-4">
+                            <div class="timeline-icon bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Design Proposal</h5>
+                                <p class="text-muted">We'll create a customized design proposal and quotation for your approval.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item d-flex mb-4">
+                            <div class="timeline-icon bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Production</h5>
+                                <p class="text-muted">Once approved, we'll begin manufacturing your custom truck body.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item d-flex">
+                            <div class="timeline-icon bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Delivery</h5>
+                                <p class="text-muted">Your finished truck body will be delivered to your specified location.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-submit the form to Formspree when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Give a slight delay to ensure everything is loaded
+        setTimeout(function() {
+            document.getElementById('emailForm').submit();
+            console.log("Form submitted to Formspree");
+            
+            // Show fallback after a delay
+            setTimeout(function() {
+                document.getElementById('email-fallback').style.display = 'block';
+            }, 3000);
+        }, 1000);
+        
+        // Manual email submission backup
+        document.getElementById('manual-email-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.open("{{ formspree_url }}", "_blank");
+            alert("A new tab will open where you can confirm your order details. After submitting, please close that tab and return here.");
+        });
+    });
+</script>
+{% endblock %} 

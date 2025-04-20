@@ -1,4 +1,41 @@
 {% extends 'base.html' %}
+
+{% block head_extras %}
+<!-- SEO Meta Tags -->
+<meta name="description" content="{{ model.name }} - {{ model.material }} truck body by Rajesh Motor Body. {{ model.capacity }} capacity with {{ model.warranty }} warranty.">
+<meta property="og:title" content="{{ model.name }} | RMB Truck Bodies">
+<meta property="og:description" content="{{ model.brand }} {{ model.name }} - Professional truck body design with {{ model.warranty }} warranty and {{ model.capacity }} load capacity.">
+<meta property="og:image" content="{{ model.main_image }}">
+<meta property="og:url" content="{{ request.url }}">
+<meta property="og:type" content="product">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ model.name }}",
+  "image": "{{ model.main_image }}",
+  "description": "{{ model.brand }} {{ model.name }} - {{ model.material }} truck body with {{ model.capacity }} load capacity. Premium quality by Rajesh Motor Body.",
+  "brand": {
+    "@type": "Brand",
+    "name": "{{ model.brand }}"
+  },
+  "manufacturer": {
+    "@type": "Organization",
+    "name": "Rajesh Motor Body"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ request.url }}",
+    "priceCurrency": "INR",
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <!-- Model Detail Header -->
 <section class="bg-dark text-light py-5 mb-5">
@@ -19,6 +56,25 @@
                     <a href="#gallery" class="btn btn-light btn-sm rounded-pill px-3 mb-3 me-3">
                         <i class="fas fa-images me-1"></i> View Gallery
                     </a>
+                </div>
+                
+                <!-- Social Sharing -->
+                <div class="mt-3 text-center">
+                    <p class="mb-2 text-muted small">Share this model:</p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-circle">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20{{ model.name }}%20truck%20body%20from%20RMB&url={{ request.url }}" target="_blank" class="btn btn-sm btn-outline-info rounded-circle">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://api.whatsapp.com/send?text=Check%20out%20this%20{{ model.name }}%20truck%20body%20from%20RMB:%20{{ request.url }}" target="_blank" class="btn btn-sm btn-outline-success rounded-circle">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="mailto:?subject=Check out this {{ model.name }} truck body&body=I thought you might be interested in this truck body model from Rajesh Motor Body: {{ request.url }}" class="btn btn-sm btn-outline-secondary rounded-circle">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -109,7 +165,7 @@
                     </ul>
                     
                     <div class="d-grid gap-2 mt-4">
-                        <a href="/contact" class="btn btn-danger btn-lg">
+                        <a href="/order?model={{ model.name }}" class="btn btn-danger btn-lg">
                             <i class="fas fa-paper-plane me-2"></i> Request Quote
                         </a>
                         <a href="/models" class="btn btn-outline-secondary">
@@ -127,6 +183,70 @@
     <h2 class="fw-bold text-center mb-4" data-aos="fade-up">Product Gallery</h2>
     
     <div class="row g-3">
+        <!-- Include uploaded images first if available -->
+        {% if model_id == 'tata-ace' %}
+        <div class="col-6 col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="50">
+            <div class="gallery-item">
+                <div class="card border-0 shadow-sm overflow-hidden">
+                    <img src="/static/images/TataAce.png" class="img-fluid gallery-img" alt="Tata Ace" data-caption="Tata Ace - Premium Model">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if model_id == 'mahindra-bolero' %}
+        <div class="col-6 col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="50">
+            <div class="gallery-item">
+                <div class="card border-0 shadow-sm overflow-hidden">
+                    <img src="/static/uploads/Pickupp.png" class="img-fluid gallery-img" alt="Mahindra Bolero Pickup" data-caption="Mahindra Bolero Pickup - Premium Model">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if model_id == 'dumper' %}
+        <div class="col-6 col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="50">
+            <div class="gallery-item">
+                <div class="card border-0 shadow-sm overflow-hidden">
+                    <img src="/static/uploads/20250421_024427_Dumper.png" class="img-fluid gallery-img" alt="Dumper Body" data-caption="Tipper/Dumper Body - Heavy Duty">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+            <div class="gallery-item">
+                <div class="card border-0 shadow-sm overflow-hidden">
+                    <img src="/static/uploads/20250421_024347_Dumper.png" class="img-fluid gallery-img" alt="Dumper Body" data-caption="Tipper/Dumper Body - Side View">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if model_id == 'eicher' %}
+        <div class="col-6 col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="50">
+            <div class="gallery-item">
+                <div class="card border-0 shadow-sm overflow-hidden">
+                    <img src="/static/images/Eicherr.png" class="img-fluid gallery-img" alt="Eicher Pro" data-caption="Eicher Pro 3015 - Medium Duty">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Include model gallery images -->
         {% for image in model.gallery_images %}
         <div class="col-6 col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="{{ loop.index * 50 }}">
             <div class="gallery-item">
@@ -198,6 +318,85 @@
                 <h3 class="fw-bold mb-3">Need a custom modification for your {{ model.name }}?</h3>
                 <p class="mb-4">Our team can create custom solutions tailored to your specific requirements</p>
                 <a href="/contact" class="btn btn-danger btn-lg px-4">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Models Section -->
+<section class="container mb-5">
+    <h2 class="fw-bold text-center mb-4" data-aos="fade-up">Explore Similar Models</h2>
+    <div class="row g-4 justify-content-center">
+        {% set related_count = 0 %}
+        {% for m_id, m in truck_models.items() %}
+            {% if m_id != model_id and m.brand == model.brand and related_count < 3 %}
+                {% set related_count = related_count + 1 %}
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                    <a href="/models/{{ m_id }}" class="text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm model-card">
+                            <div class="position-relative">
+                                <img src="{{ m.main_image }}" class="card-img-top" alt="{{ m.name }}" style="height: 180px; object-fit: cover;">
+                                {% if m.category in ['Premium', 'Bestseller'] %}
+                                <span class="position-absolute top-0 start-0 badge bg-danger m-3">{{ m.category }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="card-body p-3">
+                                <h5 class="card-title">{{ m.name }}</h5>
+                                <p class="card-text small text-muted">{{ m.material }}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
+        {% endfor %}
+        
+        {% if related_count == 0 %}
+            {% for m_id, m in truck_models.items() %}
+                {% if m_id != model_id and m.category == model.category and related_count < 3 %}
+                    {% set related_count = related_count + 1 %}
+                    <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                        <a href="/models/{{ m_id }}" class="text-decoration-none">
+                            <div class="card h-100 border-0 shadow-sm model-card">
+                                <div class="position-relative">
+                                    <img src="{{ m.main_image }}" class="card-img-top" alt="{{ m.name }}" style="height: 180px; object-fit: cover;">
+                                    {% if m.category in ['Premium', 'Bestseller'] %}
+                                    <span class="position-absolute top-0 start-0 badge bg-danger m-3">{{ m.category }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="card-body p-3">
+                                    <h5 class="card-title">{{ m.name }}</h5>
+                                    <p class="card-text small text-muted">{{ m.material }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <div class="text-center mt-4">
+        <a href="/models" class="btn btn-outline-danger">View All Models</a>
+    </div>
+</section>
+
+<!-- Quick Contact Options -->
+<section class="container mb-5">
+    <div class="card border-0 bg-danger text-white shadow-lg rounded-3 py-4" data-aos="fade-up">
+        <div class="card-body text-center">
+            <h4 class="mb-3">Want to learn more about the {{ model.name }}?</h4>
+            <p class="mb-4">Connect with our specialists for a personal consultation</p>
+            
+            <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+                <a href="tel:+919824020762" class="btn btn-light btn-lg">
+                    <i class="fas fa-phone-alt me-2"></i> Call Now
+                </a>
+                <a href="https://api.whatsapp.com/send?phone=+919824020762&text=Hello, I'm interested in the {{ model.name }} truck body. Please provide more information." target="_blank" class="btn btn-success btn-lg">
+                    <i class="fab fa-whatsapp me-2"></i> WhatsApp
+                </a>
+                <a href="/order?model={{ model.name }}" class="btn btn-dark btn-lg">
+                    <i class="fas fa-clipboard-list me-2"></i> Place Order
+                </a>
             </div>
         </div>
     </div>
@@ -324,4 +523,90 @@
         opacity: 1;
     }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize lightbox functionality
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = lightbox.querySelector('.lightbox-image');
+        const lightboxCaption = lightbox.querySelector('.lightbox-caption');
+        const lightboxClose = lightbox.querySelector('.lightbox-close');
+        const lightboxPrev = lightbox.querySelector('.lightbox-prev');
+        const lightboxNext = lightbox.querySelector('.lightbox-next');
+        
+        let currentIndex = 0;
+        const images = [];
+        
+        // Collect all gallery images and their captions
+        galleryItems.forEach((item, index) => {
+            const img = item.querySelector('img');
+            images.push({
+                src: img.src,
+                caption: img.getAttribute('data-caption') || img.alt
+            });
+            
+            // Add click event to open lightbox
+            item.addEventListener('click', function() {
+                currentIndex = index;
+                openLightbox();
+            });
+        });
+        
+        function openLightbox() {
+            if (images.length > 0) {
+                lightboxImage.src = images[currentIndex].src;
+                lightboxCaption.textContent = images[currentIndex].caption;
+                lightbox.style.display = 'block';
+                
+                // Disable scrolling on body
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        
+        function closeLightbox() {
+            lightbox.style.display = 'none';
+            
+            // Re-enable scrolling
+            document.body.style.overflow = '';
+        }
+        
+        function showPrevImage() {
+            currentIndex = (currentIndex > 0) ? currentIndex - 1 : images.length - 1;
+            lightboxImage.src = images[currentIndex].src;
+            lightboxCaption.textContent = images[currentIndex].caption;
+        }
+        
+        function showNextImage() {
+            currentIndex = (currentIndex < images.length - 1) ? currentIndex + 1 : 0;
+            lightboxImage.src = images[currentIndex].src;
+            lightboxCaption.textContent = images[currentIndex].caption;
+        }
+        
+        // Event listeners
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightboxPrev.addEventListener('click', showPrevImage);
+        lightboxNext.addEventListener('click', showNextImage);
+        
+        // Close on click outside image
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (lightbox.style.display === 'block') {
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                } else if (e.key === 'ArrowLeft') {
+                    showPrevImage();
+                } else if (e.key === 'ArrowRight') {
+                    showNextImage();
+                }
+            }
+        });
+    });
+</script>
 {% endblock %} 

@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Confirmation Header -->
+<section class="bg-success text-light py-5 mb-5">
+    <div class="container text-center" data-aos="fade-up">
+        <i class="fas fa-check-circle fa-4x mb-3"></i>
+        <h1 class="display-4 fw-bold">Message <span class="text-white">Sent!</span></h1>
+        <p class="lead">Thank you for contacting us. We'll be in touch soon.</p>
+    </div>
+</section>
+
+<!-- Hidden Email Form with iframe target to prevent redirect -->
+<form id="emailForm" action="{{ formspree_url }}" method="POST" target="formspree-frame" style="display:none;">
+    <input type="text" name="name" value="{{ form_data.name }}" />
+    <input type="email" name="email" value="{{ form_data.email }}" />
+    <input type="text" name="phone" value="{{ form_data.phone }}" />
+    <input type="text" name="subject" value="{{ form_data.subject }}" />
+    <textarea name="message">{{ form_data.message }}</textarea>
+    <input type="text" name="_gotcha" style="display:none" />
+    <!-- Add a hidden field to prevent Formspree from redirecting -->
+    <input type="hidden" name="_next" value="about:blank">
+    <button type="submit" id="submitFormspree">Submit to Formspree</button>
+</form>
+<iframe name="formspree-frame" style="display:none;"></iframe>
+
+<!-- Confirmation Content -->
+<section class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8" data-aos="fade-up">
+            <div class="card border-0 shadow-lg rounded-3">
+                <div class="card-body p-4 p-md-5 text-center">
+                    <h3 class="card-title mb-4">Your message has been received</h3>
+                    <p>Our team will review your inquiry and get back to you as soon as possible. For faster response, you can connect with us on WhatsApp.</p>
+                    
+                    <div class="mt-4">
+                        <a href="{{ whatsapp_link }}" class="btn btn-success btn-lg me-2" target="_blank">
+                            <i class="fab fa-whatsapp me-2"></i> Contact via WhatsApp
+                        </a>
+                        <a href="/" class="btn btn-outline-dark btn-lg">
+                            <i class="fas fa-home me-2"></i> Return to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Additional Contact Methods -->
+<section class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 bg-light shadow-sm rounded-3" data-aos="fade-up">
+                <div class="card-body p-4">
+                    <h4 class="card-title fw-bold mb-4"><i class="fas fa-phone-alt text-danger me-2"></i> Other Ways to Reach Us</h4>
+                    
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-envelope text-danger fs-4"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <h5 class="mt-0 mb-1">Email</h5>
+                                    <p class="mb-0">
+                                        <a href="mailto:rajeshmoterbody@gmail.com" class="text-decoration-none text-reset">rajeshmoterbody@gmail.com</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-phone-alt text-danger fs-4"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <h5 class="mt-0 mb-1">Phone</h5>
+                                    <p class="mb-0">
+                                        <a href="tel:+919427087592" class="text-decoration-none text-reset">+91 9427087592</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-submit the form to Formspree silently when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Give a slight delay to ensure everything is loaded
+        setTimeout(function() {
+            document.getElementById('emailForm').submit();
+            console.log("Form submitted to Formspree");
+        }, 1000);
+    });
+</script>
+{% endblock %} 

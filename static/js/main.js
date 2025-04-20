@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the custom lightbox
     initLightbox();
 
+    // Initialize image upload preview
+    initImageUploadPreview();
+
     // Initialize AOS animations
     if (typeof AOS !== 'undefined') {
         AOS.init({
@@ -11,6 +14,39 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Function to preview uploaded images
+function initImageUploadPreview() {
+    const imageInput = document.querySelector('input[type="file"][name="image"]');
+    const previewContainer = document.getElementById('image-preview-container');
+
+    if (!imageInput || !previewContainer) return;
+
+    imageInput.addEventListener('change', function() {
+        previewContainer.innerHTML = '';
+
+        if (this.files && this.files[0]) {
+            const file = this.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.classList.add('img-fluid', 'rounded', 'mt-2');
+                img.style.maxHeight = '200px';
+
+                const caption = document.createElement('p');
+                caption.classList.add('text-muted', 'mb-0', 'mt-1');
+                caption.textContent = file.name;
+
+                previewContainer.appendChild(img);
+                previewContainer.appendChild(caption);
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
+}
 
 function initLightbox() {
     const galleryItems = document.querySelectorAll('.gallery-item');
