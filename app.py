@@ -148,20 +148,20 @@ truck_models = {
         "main_image": "/static/images/SlidingCurtain.png",
         "gallery_images": [
             {
-                "url": "https://5.imimg.com/data5/SELLER/Default/2022/1/XR/ZU/PN/108537223/eicher-pro-3015-truck-1000x1000.png",
+                "url": "/static/images/sliding/SlidingFront.jpg",
                 "caption": "Eicher Sliding Curtain Front View"
             },
             {
-                "url": "https://5.imimg.com/data5/SELLER/Default/2021/10/OO/ME/DD/36130494/eicher-pro-3015-truck-1000x1000.jpg",
+                "url": "/static/images/sliding/SlidingSide.jpg",
                 "caption": "Eicher Sliding Curtain Side View"
             },
             {
-                "url": "https://5.imimg.com/data5/ANDROID/Default/2021/11/KK/MM/GJ/46481591/product-jpeg-1000x1000.jpg",
+                "url": "/static/images/sliding/SlidingBack.jpg",
                 "caption": "Eicher Sliding Curtain with Open Side"
             },
             {
-                "url": "https://5.imimg.com/data5/SELLER/Default/2023/7/332186088/QR/XL/JQ/182158761/eicher-3015-truck-1000x1000.jpg",
-                "caption": "Eicher Pro Full Vehicle"
+                "url": "/static/images/sliding/Sliding.jpg",
+                "caption": "Eicher Sliding Curtain Back View"
             }
         ],
         "features": [
@@ -216,7 +216,7 @@ truck_models = {
         "capacity": "Up to 15 tons",
         "location": "Dabhan, Gujarat",
         "compatible_chassis": "Tata LPT 1613, 1615, 1618 series",
-        "main_image": "static/images/truck-removebg-preview.png",
+        "main_image": "/static/images/truck-removebg-preview.png",
         "gallery_images": [
             {
                 "url": "https://5.imimg.com/data5/SELLER/Default/2023/4/SU/QD/WZ/80849576/tata-3618-tip-trailer-1000x1000.jpg",
@@ -287,7 +287,7 @@ truck_models = {
         "capacity": "Up to 30 tons depending on configuration",
         "location": "Dabhan, Gujarat",
         "compatible_chassis": "Tata, Ashok Leyland, BharatBenz, Eicher, and more",
-        "main_image": "static/images/container-removebg-preview.png",
+        "main_image": "/static/images/container-removebg-preview.png",
         "gallery_images": [
             {
                 "url": "https://5.imimg.com/data5/SELLER/Default/2022/3/DL/CH/KA/41051223/tata-1613-container-body-1000x1000.jpg",
@@ -358,7 +358,7 @@ truck_models = {
         "capacity": "Up to 25 tons",
         "location": "Dabhan, Gujarat",
         "compatible_chassis": "Ashok Leyland Ecomet 1115, 1215, 1415 series",
-        "main_image": "static/images/Ashok.png",
+        "main_image": "/static/images/Ashok.png",
         "gallery_images": [
             {
                 "url": "https://5.imimg.com/data5/ANDROID/Default/2022/2/CS/VI/GZ/41617752/product-jpeg-1000x1000.jpg",
